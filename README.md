@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **Nest**
 
-## Getting Started
+This is the frontend application for Nest, a course and user management system, built using **Next.js**, **Tailwind CSS**, and **Axios** for API calls.
 
-First, run the development server:
+---
+
+## **Table of Contents**
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Scripts](#scripts)
+- [Usage](#usage)
+
+---
+
+## **Features**
+
+- Responsive design with Tailwind CSS.
+- Integrated Sidebar with filters for course content.
+- Dynamic video player and PDF viewer.
+- Notes management with options to add, edit, and delete notes.
+- Progress tracking and content completion handling.
+
+---
+
+## **Technologies Used**
+
+- **Next.js**: React framework for server-rendered applications.
+- **TypeScript**: Strongly typed JavaScript for better developer experience.
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- **Axios**: HTTP client for API requests.
+- **Headless UI**: Accessible UI components for dropdowns and menus.
+
+---
+
+## **Getting Started**
+
+Follow these steps to set up and run the project locally:
+
+### **1. Clone the Repository**
+
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
+
+### **2. Install Dependencies**
+
+```bash
+npm install
+```
+
+### **3. Set Up Environment Variables**
+
+Create a `.env.local` file in the root of the project and add the following variables:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+```
+
+### **4. Start the Development Server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be accessible at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## **Project Structure**
 
-## Learn More
+```
+.
+├── public/                 # Static assets
+├── src/
+│   ├── api/                # Axios instance and API calls
+│   │   └── axios.ts        # Axios setup with base URL
+│   ├── components/         # Reusable components
+│   │   ├── NotesSection/   # Notes-related components
+│   │   ├── SidebarSection/ # Sidebar components
+│   │   ├── VideoPlayerSection/ # Video Player
+│   │   ├── ProgressBar.tsx # Progress bar component
+│   ├── pages/              # Next.js pages
+│   │   ├── index.tsx       # Landing page
+│   │   ├── course.tsx      # Course page
+│   ├── styles/             # Global and module-specific styles
+│   ├── utils/              # Helper functions
+├── .env.local              # Environment variables
+├── package.json            # Project dependencies and scripts
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **Environment Variables**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable Name              | Description                      | Example Value              |
+|----------------------------|----------------------------------|----------------------------|
+| `NEXT_PUBLIC_API_BASE_URL` | Base URL for API calls           | `http://localhost:5000/api` |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## **Scripts**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command         | Description                              |
+|-----------------|------------------------------------------|
+| `npm run dev`   | Starts the development server.           |
+| `npm run build` | Builds the project for production.       |
+| `npm start`     | Starts the production server.            |
+| `npm run lint`  | Runs ESLint for code linting.            |
+
+---
+
+## **Usage**
+
+### **1. Run the Application**
+
+After starting the development server, visit [http://localhost:3000](http://localhost:3000).
+
+### **2. Interact with Features**
+
+- Navigate to the course page to view the video player and Sidebar.
+- Use the filters in the Sidebar to sort content by type or status.
+- Add, edit, and delete notes directly in the Notes section.
+- Track content progress and mark items as completed or not completed.
+
+---
