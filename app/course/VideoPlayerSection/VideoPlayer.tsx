@@ -68,7 +68,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </div>
       {type === "video" ? (
         <video
-          className="w-full h-[70vh] rounded-md shadow-lg"
+          className="w-full lg:h-[70vh] rounded-md shadow-lg"
           controls
           preload="metadata"
           src={url}
