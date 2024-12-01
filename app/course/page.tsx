@@ -12,6 +12,7 @@ const CoursePage: React.FC = () => {
   const userId = '123456'; // Replace with dynamic userId if needed
 
   const [course, setCourse] = useState<any>(null); // Course data from /courses
+  const [userCourseStatuses, setUserCourseStatuses] = useState<any[]>([]); // User-specific statuses from /user-courses
   const [selectedContent, setSelectedContent] = useState<any>(null); // Currently selected content
   const [selectedContentId, setSelectedContentId] = useState<string | null>(null); // ID of the selected content
   const [loading, setLoading] = useState(true); // Loading state
@@ -23,14 +24,22 @@ const CoursePage: React.FC = () => {
         const courseResponse = await api.get(`/courses/${courseId}`);
         setCourse(courseResponse.data);
 
+        // Fetch user-specific content statuses
+        const userCourseResponse = await api.get(`/user-courses/${userId}/${courseId}/contents`);
+        setUserCourseStatuses(userCourseResponse.data);
+
         // Automatically select the first content from the first parent topic
         const firstParent = courseResponse.data.parentTopics[0];
         if (firstParent && firstParent.contents.length > 0) {
+          const firstContent = firstParent.contents[0];
+          const contentStatus = getContentStatus(userCourseResponse.data, firstParent.parentId, firstContent.contentId);
+
           setSelectedContent({
-            ...firstParent.contents[0],
-            parentTopic: firstParent.parentId, // Include parentTopic when setting state
+            ...firstContent,
+            parentTopic: firstParent.parentId,
+            status: contentStatus,
           });
-          setSelectedContentId(firstParent.contents[0].contentId);
+          setSelectedContentId(firstContent.contentId);
         }
 
         setLoading(false);
@@ -40,12 +49,24 @@ const CoursePage: React.FC = () => {
     };
 
     fetchData();
-  }, [courseId]);
+  }, [courseId, userId]);
+
+  const getContentStatus = (statuses: any[], parentTopicId: string, contentId: string): string => {
+    const parentTopic = statuses.find((topic) => topic.parentTopicId === parentTopicId);
+    if (parentTopic) {
+      const content = parentTopic.contents.find((item) => item.contentId === contentId);
+      return content ? content.status : 'Not Completed';
+    }
+    return 'Not Completed'; // Default status
+  };
 
   const handleContentSelect = (content: any, parentTopic: string) => {
+    const contentStatus = getContentStatus(userCourseStatuses, parentTopic, content.contentId);
+
     setSelectedContent({
       ...content,
-      parentTopic, // Add parentTopic to the selectedContent
+      parentTopic,
+      status: contentStatus,
     });
     setSelectedContentId(content.contentId);
   };
@@ -73,7 +94,7 @@ const CoursePage: React.FC = () => {
               const fetchUserContentStatuses = async () => {
                 try {
                   const response = await api.get(`/user-courses/${userId}/${courseId}/contents`);
-                  setUserCourseProgress(response.data); // Assuming this state exists to store progress
+                  setUserCourseStatuses(response.data);
                 } catch (error) {
                   console.error('Error refreshing content statuses:', error);
                 }
@@ -99,7 +120,7 @@ const CoursePage: React.FC = () => {
         <Sidebar
           courseId={courseId}
           userId={userId}
-          onContentSelect={handleContentSelect} // Pass parentTopic to handleContentSelect
+          onContentSelect={handleContentSelect} // Pass parentTopic and content to handleContentSelect
           selectedContentId={selectedContentId}
           setSelectedContentId={setSelectedContentId}
         />
