@@ -34,18 +34,19 @@ const NotesSection = ({ courseId, userId }: { courseId: string; userId: string }
   };
 
     const editNote = async (noteId: string, newContent: string) => {
-        try {
-            const response = await api.put(`/user-courses/${userId}/${courseId}/notes/${noteId}`, {
-                content: newContent,
-            });
-            setNotes(
-                notes.map((note) =>
-                    note.noteId === noteId ? { ...note, content: response.data.content } : note
-                )
-            );
-        } catch (error) {
-            console.error('Error editing note:', error);
-        }
+      try {
+        await api.put(`/user-courses/${userId}/${courseId}/notes/${noteId}`, {
+          content: newContent,
+        });
+        const updatedNote = (await api.get(`/user-courses/${userId}/${courseId}/notes/${noteId}`)).data;
+        setNotes(
+          notes.map((note) =>
+            note.noteId === noteId ? updatedNote : note
+          )
+        );
+      } catch (error) {
+        console.error('Error editing note:', error);
+      }
     };
 
     const deleteNote = async (noteId: string) => {

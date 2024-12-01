@@ -18,7 +18,7 @@ const NoteCard = ({
                 <Menu.Button>
                     <span className="text-gray-500">...</span>
                 </Menu.Button>
-                <Menu.Items className="absolute bg-white border rounded shadow-lg">
+                <Menu.Items className="absolute bg-white border rounded shadow-lg z-10">
                     <Menu.Item>
                         {({ active }) => (
                             <button
