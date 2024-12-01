@@ -26,7 +26,10 @@ const CoursePage: React.FC = () => {
         // Automatically select the first content from the first parent topic
         const firstParent = courseResponse.data.parentTopics[0];
         if (firstParent && firstParent.contents.length > 0) {
-          setSelectedContent(firstParent.contents[0]);
+          setSelectedContent({
+            ...firstParent.contents[0],
+            parentTopic: firstParent.parentId, // Include parentTopic when setting state
+          });
           setSelectedContentId(firstParent.contents[0].contentId);
         }
 
@@ -39,8 +42,12 @@ const CoursePage: React.FC = () => {
     fetchData();
   }, [courseId]);
 
-  const handleContentSelect = (content: any) => {
-    setSelectedContent(content);
+  const handleContentSelect = (content: any, parentTopic: string) => {
+    setSelectedContent({
+      ...content,
+      parentTopic, // Add parentTopic to the selectedContent
+    });
+    setSelectedContentId(content.contentId);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -58,9 +65,22 @@ const CoursePage: React.FC = () => {
         {/* Video Player */}
         {selectedContent ? (
           <VideoPlayer
-            url={selectedContent.url}
-            title={selectedContent.title}
-            type={selectedContent.type}
+            selectedContent={selectedContent}
+            userId={userId}
+            courseId={courseId}
+            refreshSidebar={() => {
+              // Fetch updated user-course content statuses
+              const fetchUserContentStatuses = async () => {
+                try {
+                  const response = await api.get(`/user-courses/${userId}/${courseId}/contents`);
+                  setUserCourseProgress(response.data); // Assuming this state exists to store progress
+                } catch (error) {
+                  console.error('Error refreshing content statuses:', error);
+                }
+              };
+
+              fetchUserContentStatuses();
+            }}
           />
         ) : (
           <p>Please select a content to view</p>
@@ -79,7 +99,7 @@ const CoursePage: React.FC = () => {
         <Sidebar
           courseId={courseId}
           userId={userId}
-          onContentSelect={handleContentSelect}
+          onContentSelect={handleContentSelect} // Pass parentTopic to handleContentSelect
           selectedContentId={selectedContentId}
           setSelectedContentId={setSelectedContentId}
         />
