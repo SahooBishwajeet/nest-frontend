@@ -47,7 +47,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filtersVisible, setFiltersVisible] = useState(true);
-  const [selectedFilter, setSelectedFilter] = useState("All"); // Default filter
+
+  // Filters
+  const [selectedFilter, setSelectedFilter] = useState("All"); // All, Completed, Not Completed
+  const [contentTypeFilter, setContentTypeFilter] = useState("All"); // All, Video, PDF
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,19 +96,26 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const filterContents = (parentId: string, contents: Content[]): Content[] => {
+    // Apply Content Type Filter (All, Video, PDF)
+    let filteredContents = contents;
+    if (contentTypeFilter !== "All") {
+      filteredContents = contents.filter((content) => content.type === contentTypeFilter.toLowerCase());
+    }
+
+    // Apply Status Filter (All, Completed, Not Completed)
     switch (selectedFilter) {
       case "Completed":
-        return contents.filter(
+        return filteredContents.filter(
           (content) =>
             getContentStatus(parentId, content.contentId) === "Completed"
         );
       case "Not Completed":
-        return contents.filter(
+        return filteredContents.filter(
           (content) =>
             getContentStatus(parentId, content.contentId) === "Not Completed"
         );
       default: // All
-        return contents;
+        return filteredContents;
     }
   };
 
@@ -127,38 +137,75 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {filtersVisible && (
-        <div className="mb-4">
-          <button
-            className={`px-3 py-1 mr-2 rounded ${
-              selectedFilter === "All"
-                ? "bg-purple-500 text-white"
-                : "bg-gray-200"
-            }`}
-            onClick={() => setSelectedFilter("All")}
-          >
-            All
-          </button>
-          <button
-            className={`px-3 py-1 mr-2 rounded ${
-              selectedFilter === "Completed"
-                ? "bg-purple-500 text-white"
-                : "bg-gray-200"
-            }`}
-            onClick={() => setSelectedFilter("Completed")}
-          >
-            Completed
-          </button>
-          <button
-            className={`px-3 py-1 rounded ${
-              selectedFilter === "Not Completed"
-                ? "bg-purple-500 text-white"
-                : "bg-gray-200"
-            }`}
-            onClick={() => setSelectedFilter("Not Completed")}
-          >
-            Not Completed
-          </button>
-        </div>
+        <>
+          {/* Content Type Filter */}
+          <div className="mb-4">
+            <button
+              className={`px-3 py-1 mr-2 rounded ${
+                contentTypeFilter === "All"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setContentTypeFilter("All")}
+            >
+              All
+            </button>
+            <button
+              className={`px-3 py-1 mr-2 rounded ${
+                contentTypeFilter === "Video"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setContentTypeFilter("Video")}
+            >
+              Video
+            </button>
+            <button
+              className={`px-3 py-1 rounded ${
+                contentTypeFilter === "PDF"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setContentTypeFilter("PDF")}
+            >
+              PDF
+            </button>
+          </div>
+
+          {/* Status Filter */}
+          <div className="mb-4">
+            <button
+              className={`px-3 py-1 mr-2 rounded ${
+                selectedFilter === "All"
+                  ? "bg-purple-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setSelectedFilter("All")}
+            >
+              All
+            </button>
+            <button
+              className={`px-3 py-1 mr-2 rounded ${
+                selectedFilter === "Completed"
+                  ? "bg-purple-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setSelectedFilter("Completed")}
+            >
+              Completed
+            </button>
+            <button
+              className={`px-3 py-1 rounded ${
+                selectedFilter === "Not Completed"
+                  ? "bg-purple-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setSelectedFilter("Not Completed")}
+            >
+              Not Completed
+            </button>
+          </div>
+        </>
       )}
 
       {/* Parent Topics and Contents */}
@@ -188,7 +235,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       ? "bg-purple-100 border-l-4 border-purple-500"
                       : "hover:bg-gray-100"
                   }`}
-                  onClick={() => onContentSelect(content, topic.parentId)} // Pass parentTopicId
+                  onClick={() => handleContentClick(content)}
                 >
                   {/* Content Type Icon */}
                   <span className="mr-2 text-lg">
