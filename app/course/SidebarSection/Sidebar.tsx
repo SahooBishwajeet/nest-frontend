@@ -99,7 +99,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     // Apply Content Type Filter (All, Video, PDF)
     let filteredContents = contents;
     if (contentTypeFilter !== "All") {
-      filteredContents = contents.filter((content) => content.type === contentTypeFilter.toLowerCase());
+      filteredContents = contents.filter(
+        (content) => content.type === contentTypeFilter.toLowerCase()
+      );
     }
 
     // Apply Status Filter (All, Completed, Not Completed)
@@ -229,32 +231,33 @@ const Sidebar: React.FC<SidebarProps> = ({
             <ul className="pl-4 mt-2">
               {filterContents(topic.parentId, topic.contents).map((content) => (
                 <li
-                key={content.contentId}
-                className={`flex items-center p-2 rounded mb-1 cursor-pointer ${
-                  selectedContentId === content.contentId
-                    ? "bg-purple-100 border-l-4 border-purple-500"
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => onContentSelect(content, topic.parentId)} // Pass parentTopicId
-              >
-                {/* Content Type Icon */}
-                <span className="mr-2 text-lg">
-                  {content.type === "video" ? (
-                    <FaVideo className="text-purple-500" />
-                  ) : (
-                    <FaFilePdf className="text-red-500" />
-                  )}
-                </span>
-                <span className="text-gray-800">{content.title}</span>
-                {/* Content Status */}
-                <span className="ml-auto text-sm">
-                  {getContentStatus(topic.parentId, content.contentId) === "Completed" ? (
-                    <MdCheckCircle className="text-green-500" />
-                  ) : (
-                    <MdRadioButtonUnchecked className="text-gray-400" />
-                  )}
-                </span>
-              </li>
+                  key={content.contentId}
+                  className={`flex items-center p-2 rounded mb-1 cursor-pointer ${
+                    selectedContentId === content.contentId
+                      ? "bg-purple-100 border-l-4 border-purple-500"
+                      : "hover:bg-gray-100"
+                  }`}
+                  onClick={() => onContentSelect(content, topic.parentId)} // Pass parentTopicId
+                >
+                  {/* Content Type Icon */}
+                  <span className="mr-2 text-lg">
+                    {content.type === "video" ? (
+                      <FaVideo className="text-purple-500" />
+                    ) : (
+                      <FaFilePdf className="text-red-500" />
+                    )}
+                  </span>
+                  <span className="text-gray-800">{content.title}</span>
+                  {/* Content Status */}
+                  <span className="ml-auto text-sm">
+                    {getContentStatus(topic.parentId, content.contentId) ===
+                    "Completed" ? (
+                      <MdCheckCircle className="text-green-500" />
+                    ) : (
+                      <MdRadioButtonUnchecked className="text-gray-400" />
+                    )}
+                  </span>
+                </li>
               ))}
             </ul>
           )}

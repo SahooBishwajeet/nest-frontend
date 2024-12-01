@@ -129,7 +129,7 @@ const CoursePage: React.FC = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row">
+    <div className="flex flex-col h-full lg:flex-row">
       {/* Main Content */}
       <div className="flex-grow p-4">
         {/* Course Title */}
@@ -161,9 +161,7 @@ const CoursePage: React.FC = () => {
       </div>
 
       {/* Sidebar Section */}
-      <div
-        className={`w-full lg:w-1/3 bg-gray-100 p-4`}
-      >
+      <div className={`w-full lg:w-1/3 bg-gray-100 p-4`}>
         {/* Course Name */}
         <p className="text-3xl font-semibold mb-2">{course.title}</p>
         {/* Progress Bar */}
