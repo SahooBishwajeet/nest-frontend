@@ -15,6 +15,7 @@ const CoursePage: React.FC = () => {
   const [userCourseStatuses, setUserCourseStatuses] = useState<any[]>([]); // User-specific statuses from /user-courses
   const [selectedContent, setSelectedContent] = useState<any>(null); // Currently selected content
   const [selectedContentId, setSelectedContentId] = useState<string | null>(null); // ID of the selected content
+  const [sidebarKey, setSidebarKey] = useState<number>(0); // Unique key for Sidebar re-render
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
@@ -60,6 +61,16 @@ const CoursePage: React.FC = () => {
     return 'Not Completed'; // Default status
   };
 
+  const refreshSidebar = async () => {
+    try {
+      const response = await api.get(`/user-courses/${userId}/${courseId}/contents`);
+      setUserCourseStatuses(response.data); // Update content statuses
+      setSidebarKey((prevKey) => prevKey + 1); // Force Sidebar re-render by updating key
+    } catch (error) {
+      console.error("Error refreshing content statuses:", error);
+    }
+  };
+
   const handleContentSelect = (content: any, parentTopic: string) => {
     const contentStatus = getContentStatus(userCourseStatuses, parentTopic, content.contentId);
 
@@ -89,19 +100,7 @@ const CoursePage: React.FC = () => {
             selectedContent={selectedContent}
             userId={userId}
             courseId={courseId}
-            refreshSidebar={() => {
-              // Fetch updated user-course content statuses
-              const fetchUserContentStatuses = async () => {
-                try {
-                  const response = await api.get(`/user-courses/${userId}/${courseId}/contents`);
-                  setUserCourseStatuses(response.data);
-                } catch (error) {
-                  console.error('Error refreshing content statuses:', error);
-                }
-              };
-
-              fetchUserContentStatuses();
-            }}
+            refreshSidebar={refreshSidebar}
           />
         ) : (
           <p>Please select a content to view</p>
@@ -118,11 +117,13 @@ const CoursePage: React.FC = () => {
 
         {/* Sidebar */}
         <Sidebar
+          key={sidebarKey} // Force re-render when key changes
           courseId={courseId}
           userId={userId}
-          onContentSelect={handleContentSelect} // Pass parentTopic and content to handleContentSelect
+          onContentSelect={handleContentSelect}
           selectedContentId={selectedContentId}
           setSelectedContentId={setSelectedContentId}
+          userCourseStatuses={userCourseStatuses} // Pass updated statuses
         />
       </div>
     </div>
