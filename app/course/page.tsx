@@ -134,8 +134,7 @@ const CoursePage: React.FC = () => {
       <div className="flex-grow p-4">
         {/* Course Title */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold">{course.title}</h2>
-          <p className="text-sm text-gray-500">My Course / {course.category}</p>
+          <p className="text-sm text-gray-500">My Course / {course.category} / { course.title } </p>
         </div>
 
         {/* Video Player */}
