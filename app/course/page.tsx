@@ -71,12 +71,12 @@ const CoursePage: React.FC = () => {
     }
   };
 
-  const handleContentSelect = (content: any, parentTopic: string) => {
-    const contentStatus = getContentStatus(userCourseStatuses, parentTopic, content.contentId);
+  const handleContentSelect = (content: any, parentTopicId: string) => {
+    const contentStatus = getContentStatus(userCourseStatuses, parentTopicId, content.contentId);
 
     setSelectedContent({
       ...content,
-      parentTopic,
+      parentTopic: parentTopicId,
       status: contentStatus,
     });
     setSelectedContentId(content.contentId);
@@ -100,6 +100,8 @@ const CoursePage: React.FC = () => {
             selectedContent={selectedContent}
             userId={userId}
             courseId={courseId}
+            parentTopics={course.parentTopics}
+            onContentSelect={handleContentSelect}
             refreshSidebar={refreshSidebar}
           />
         ) : (
@@ -120,7 +122,7 @@ const CoursePage: React.FC = () => {
           key={sidebarKey} // Force re-render when key changes
           courseId={courseId}
           userId={userId}
-          onContentSelect={handleContentSelect}
+          onContentSelect={handleContentSelect} // Pass parentTopic and content to handleContentSelect
           selectedContentId={selectedContentId}
           setSelectedContentId={setSelectedContentId}
           userCourseStatuses={userCourseStatuses} // Pass updated statuses
