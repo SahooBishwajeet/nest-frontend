@@ -28,7 +28,7 @@ interface UserContentStatus {
 interface SidebarProps {
   courseId: string;
   userId: string;
-  onContentSelect: (content: Content) => void;
+  onContentSelect: (content: Content, parentTopicId: string) => void;
   selectedContentId: string | null; // Currently selected content
   setSelectedContentId: (id: string | null) => void; // Setter for selected content
 }
@@ -75,11 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const toggleAccordion = (parentId: string) => {
     setOpenAccordion(openAccordion === parentId ? null : parentId);
-  };
-
-  const handleContentClick = (content: Content) => {
-    setSelectedContentId(content.contentId);
-    onContentSelect(content);
   };
 
   const getContentStatus = (parentId: string, contentId: string): string => {

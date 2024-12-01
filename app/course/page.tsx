@@ -66,11 +66,11 @@ const CoursePage: React.FC = () => {
     contentId: string
   ): string => {
     const parentTopic = statuses.find(
-      (topic) => topic.parentTopicId === parentTopicId
+      (topic: any) => topic.parentTopicId === parentTopicId
     );
     if (parentTopic) {
       const content = parentTopic.contents.find(
-        (item) => item.contentId === contentId
+        (item: any) => item.contentId === contentId
       );
       return content ? content.status : "Not Completed";
     }
@@ -116,7 +116,7 @@ const CoursePage: React.FC = () => {
     const completedContents = userCourseStatuses.reduce(
       (completed, parent) =>
         completed +
-        parent.contents.filter((content) => content.status === "Completed")
+        parent.contents.filter((content: any) => content.status === "Completed")
           .length,
       0
     );

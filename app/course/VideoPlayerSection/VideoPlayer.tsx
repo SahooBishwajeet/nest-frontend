@@ -7,13 +7,15 @@ interface VideoPlayerProps {
     type: string; // "video" or "pdf"
     title: string;
     url: string;
-    parentTopic: string; // Parent topic for API compatibility
-    status: string; // Current status: "Completed" or "Not Completed"
+    parentTopic?: string; // Optional if parentTopic exists
   } | null;
   userId: string;
   courseId: string;
-  refreshSidebar: () => void; // Callback to refresh the Sidebar after updating status
+  parentTopics: any; // Adjust the type based on your `parentTopics` structure
+  onContentSelect: (content: any, parentTopicId: string) => void;
+  refreshSidebar: () => Promise<void>;
 }
+
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   selectedContent,
